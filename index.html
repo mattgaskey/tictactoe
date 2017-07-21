@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Tic Tac Toe</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Place favicon.ico in the root directory -->
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+
+    <!-- Modal window to choose X or O -->
+    	<div id="modal" class="modal-window">
+    		<div class="modal-box">
+    			<h2 class="modal-header">Choose X or O:</h2>
+    			<button class="btn-player" id="player-x">X</button>
+    			<button class="btn-player" id="player-o">O</button>
+    		</div>
+    	</div>
+
+    	<h1>Tic Tac Toe!</h1>
+    	<button type="button" id="start" class="start-button">Play a New Game</button>
+      <div id="gameboard" class="container hidden">
+      	<div class="score_p1">
+      		<h2>Player 1:</h2>
+      		<p class="player-score" id="score-p1"></p>
+      	</div>
+      	<div class="gameboard">
+			    <table>
+				    <tr>
+			        <td>
+								<div data-row="0" data-col="0" class="content"></div>
+							</td>
+			        <td>
+								<div data-row="0" data-col="1" class="content"></div>
+							</td>
+			        <td>
+								<div data-row="0" data-col="2" class="content"></div>
+							</td>
+				    </tr>
+				    <tr>
+			        <td>
+								<div data-row="1" data-col="0" class="content"></div>
+							</td>
+			        <td>
+								<div data-row="1" data-col="1" class="content"></div>
+							</td>
+			        <td>
+								<div data-row="1" data-col="2" class="content"></div>
+							</td>
+				    </tr>
+				    <tr>
+			        <td>
+								<div data-row="2" data-col="0" class="content"></div>
+							</td>
+			        <td>
+								<div data-row="2" data-col="1" class="content"></div>
+							</td>
+			        <td>
+								<div data-row="2" data-col="2" class="content"></div>		
+							</td>
+				    </tr>
+			    </table>
+			   </div>
+			   <div class="score_p2">
+			  	<h2>Player 2:</h2>
+			  	<p class="player-score" id="score-p2"></p>
+			   </div>
+		  </div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="js/lib/knockout-3.2.0.js"></script>
+      <script src="js/main.js"></script>
+
+    </body>
+</html>
