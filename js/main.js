@@ -7,7 +7,8 @@ $(function() {
 		scoreP2: 0,
 		playerChoice: null,
 		playerTurn: null,
-		gameState: []
+		gameState: [],
+		result: null
 	};
 
 	var controller = {
@@ -40,6 +41,8 @@ $(function() {
 			//reset scores
 			model.scoreP1 = 0;
 			model.scoreP2 = 0;
+			//prep the next game
+			this.nextGame();
 			//run gameboard init
 			gameboardView.init();
 		},
@@ -50,6 +53,10 @@ $(function() {
 
 		getPlayerScore: function(player) {
 			return model["scoreP"+player];
+		},
+
+		getPlayerTurn: function() {
+			return model.playerTurn;
 		},
 
 		switchPlayerTurn: function() {
@@ -66,20 +73,72 @@ $(function() {
 			arr[row].splice(col, 1, letter);
 		},
 
+		nextGame: function() {
+			if (model.playerChoice === "X") {
+				model.playerTurn = true;
+			}
+			//remove CSS hidden class on table
+			$("#gameboard").removeClass("hidden");
+			//clear any cell text
+			$(".content").text("");
+			//reset clickable areas in gameboard
+			$(".content").css("height", "100%");
+			//retrieve scores and paint to gameboard
+			$("#score-p1").text(controller.getPlayerScore(1));
+			$("#score-p2").text(controller.getPlayerScore(2));
+			//clear gameState array
+			model.gameState.length = 0;
+			//initialize gameState array
+			model.gameState.push([null, null, null], [null, null, null], [null, null, null]);
+		},
+
 		//check for gameOver
 		checkGameState: function() {
 			var arr = model.gameState;
 			var gameOver = false;
+			var verdict;
 			//use areEqual function to determine if array values are the same for rows, columns and diagonals
 			if (this.areEqual(arr[0][0], arr[0][1], arr[0][2]) || this.areEqual(arr[1][0], arr[1][1], arr[1][2]) || this.areEqual(arr[2][0], arr[2][1], arr[2][2])) {
 				gameOver = true;
+				if (model.playerTurn === false) {
+					verdict = "You win!";
+					model.scoreP1++;
+					
+				} else {
+					verdict = "You lose!";
+					model.scoreP2++;
+					
+				}
 			} else if (this.areEqual(arr[0][0], arr[1][0], arr[2][0]) || this.areEqual(arr[0][1], arr[1][1], arr[2][1]) || this.areEqual(arr[0][2], arr[1][2], arr[2][2])) {
 				gameOver = true;
+				if (model.playerTurn === false) {
+					verdict = "You win!";
+					model.scoreP1++;
+					
+				} else {
+					verdict = "You lose!";
+					model.scoreP2++;
+					
+				}
 			} else if (this.areEqual(arr[0][0], arr[1][1], arr[2][2]) || this.areEqual(arr[0][2], arr[1][1], arr[2][0])) {
 				gameOver = true;
+				if (model.playerTurn === false) {
+					verdict = "You win!";
+					model.scoreP1++;
+					
+				} else {
+					verdict = "You lose!";
+					model.scoreP2++;
+					
+				}
+			} else if (arr[0].indexOf(null) == -1 && arr[1].indexOf(null) == -1 && arr[2].indexOf(null) == -1) {
+				gameOver = true;
+				verdict = "It's a draw!";
+				
 			} else {
 				gameOver = false;
 			}
+			model.verdict = verdict;
 			return gameOver;
 		},
 
@@ -120,8 +179,12 @@ $(function() {
 						controller.updateGameState(randRow, randCol, "O");
 						if (controller.checkGameState() === true) {
 							setTimeout(function() {
-								alert("Game Over!");
-							}, 100)};
+								alert(model.verdict);
+							}, 100);
+							setTimeout(function() {
+								controller.nextGame()
+							}, 500)
+						};
 					} else {
 						//insert "X"
 						insert(randRow, randCol, "X");
@@ -131,8 +194,12 @@ $(function() {
 						controller.updateGameState(randRow, randCol, "X");
 						if (controller.checkGameState() === true) {
 							setTimeout(function() {
-								alert("Game Over!");
-							}, 100)};
+								alert(model.verdict);
+							}, 100);
+							setTimeout(function() {
+								controller.nextGame()
+							}, 500)
+						};
 					}	
 				//if cell is not available, try a new random cell
 				} else {
@@ -161,15 +228,7 @@ $(function() {
 		},
 
 		render: function() {
-			//remove CSS hidden class on table
-			$("#gameboard").removeClass("hidden");
-			//clear any cell text
-			$(".content").text("");
-			//reset clickable areas in gameboard
-			$(".content").css("height", "100%");
-			//retrieve scores and paint to gameboard
-			$("#score-p1").text(controller.getPlayerScore(1));
-			$("#score-p2").text(controller.getPlayerScore(2));
+			
 			//lookup playerChoice
 			var choice = controller.getPlayerChoice();
 			//if player chose 'O', computer goes first
@@ -200,11 +259,14 @@ $(function() {
 				if (controller.checkGameState() === true) {
 					//if gameOver, wait 100ms for text to paint, then alert message
 					setTimeout(function() {
-						alert("Game Over!");
+						alert(model.verdict);
 					}, 100);
+					setTimeout(function() {
+						controller.nextGame()
+					}, 500);
 					//otherwise, playerTurn is over
 				} else {
-					controller.setModel("playerTurn", false);
+					//controller.setModel("playerTurn", false);
 					//computer goes after pause to model AI thought
 					setTimeout(function() {
 						controller.computerTurn();
