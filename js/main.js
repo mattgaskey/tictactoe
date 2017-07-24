@@ -107,6 +107,7 @@ $(function() {
 				} else {
 					verdict = "You lose!";
 					model.scoreP2++;
+					this.switchPlayerTurn();
 					
 				}
 			} else if (this.areEqual(arr[0][0], arr[1][0], arr[2][0]) || this.areEqual(arr[0][1], arr[1][1], arr[2][1]) || this.areEqual(arr[0][2], arr[1][2], arr[2][2])) {
@@ -118,6 +119,7 @@ $(function() {
 				} else {
 					verdict = "You lose!";
 					model.scoreP2++;
+					this.switchPlayerTurn();
 					
 				}
 			} else if (this.areEqual(arr[0][0], arr[1][1], arr[2][2]) || this.areEqual(arr[0][2], arr[1][1], arr[2][0])) {
@@ -129,11 +131,13 @@ $(function() {
 				} else {
 					verdict = "You lose!";
 					model.scoreP2++;
+					this.switchPlayerTurn();
 					
 				}
 			} else if (arr[0].indexOf(null) == -1 && arr[1].indexOf(null) == -1 && arr[2].indexOf(null) == -1) {
 				gameOver = true;
 				verdict = "It's a draw!";
+				this.switchPlayerTurn();
 				
 			} else {
 				gameOver = false;
@@ -174,7 +178,6 @@ $(function() {
 						//and insert "O"
 						insert(randRow, randCol, "O");
 						controller.switchPlayerTurn();
-						console.log(model.playerTurn);
 						//check for gameOver
 						controller.updateGameState(randRow, randCol, "O");
 						if (controller.checkGameState() === true) {
@@ -182,14 +185,16 @@ $(function() {
 								alert(model.verdict);
 							}, 100);
 							setTimeout(function() {
-								controller.nextGame()
+								controller.nextGame();
+								if (model.playerChoice === "O") { 
+									controller.computerTurn();
+								}
 							}, 500)
 						};
 					} else {
 						//insert "X"
 						insert(randRow, randCol, "X");
 						controller.switchPlayerTurn();
-						console.log(model.playerTurn);
 						//check for gameOver
 						controller.updateGameState(randRow, randCol, "X");
 						if (controller.checkGameState() === true) {
@@ -197,7 +202,10 @@ $(function() {
 								alert(model.verdict);
 							}, 100);
 							setTimeout(function() {
-								controller.nextGame()
+								controller.nextGame();
+								if (model.playerChoice === "O") { 
+									controller.computerTurn();
+								}
 							}, 500)
 						};
 					}	
@@ -254,7 +262,6 @@ $(function() {
 					controller.updateGameState(row, col, "O");
 				}
 				controller.switchPlayerTurn();
-				console.log(model.playerTurn);
 				//check if player move is gameOver
 				if (controller.checkGameState() === true) {
 					//if gameOver, wait 100ms for text to paint, then alert message
@@ -262,7 +269,10 @@ $(function() {
 						alert(model.verdict);
 					}, 100);
 					setTimeout(function() {
-						controller.nextGame()
+						controller.nextGame();
+						if (model.playerChoice === "O") { 
+							controller.computerTurn();
+						}
 					}, 500);
 					//otherwise, playerTurn is over
 				} else {
